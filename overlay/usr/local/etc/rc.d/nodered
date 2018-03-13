@@ -1,0 +1,57 @@
+#!/bin/sh
+
+# PROVIDE: nodered
+# REQUIRE: LOGIN
+# KEYWORD: shutdown
+
+# Add the following lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable and/or configure this service:
+#
+# nodered_enable (bool):  Set it to "YES" to enable it.
+#                         Default: "NO"                          
+#
+# nodered_user:           The user account the Node-RED daemon runs as.
+#                         Default: "nrserver" 
+#
+# nodered_cmdargs:        Additional arguments for /usr/local/bin/node-red
+#                         Example: "-v" or "--userDir /home/nrserver/node-red-data/"
+#                         Default: none
+#
+# nodered_logfile:        The logfile Node-RED uses.
+#                         Default: "/var/log/nodered"
+
+. /etc/rc.subr
+name="nodered"
+rcvar="${name}_enable"
+load_rc_config ${name}
+
+: ${nodered_enable:="NO"}
+: ${nodered_user:="nrserver"}
+: ${nodered_logfile:="/var/log/nodered"}
+
+procname="/usr/local/bin/node-red"
+command="/usr/sbin/daemon"
+command_args="-o ${nodered_logfile} ${procname} ${nodered_cmdargs}"
+
+start_precmd=nodered_precmd
+extra_commands="update"
+update_cmd="nodered_update"
+
+nodered_precmd()
+{
+    export HOME="`pw usershow ${nodered_user} | awk 'BEGIN {FS = ":"} { print $9 }'`"
+    export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:${PATH}"
+
+    if [ ! -f "${nodered_logfile}" ]; then
+      touch ${nodered_logfile}
+      chown ${nodered_user} ${nodered_logfile}
+    fi
+}
+
+nodered_update()
+{
+    /usr/local/bin/npm cache clean --force
+    /usr/local/bin/npm install -g --unsafe-perm node-red
+}
+
+run_rc_command "$1"
