@@ -6,7 +6,7 @@ user_uid=2001
 
 # Node-RED post install
 mkdir -p /usr/local/etc/rc.d
-ln -s /usr/local/bin/bash /bin/bash
+#ln -s /usr/local/bin/bash /bin/bash
 
 npm install -g --unsafe-perm node-red
 
