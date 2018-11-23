@@ -8,6 +8,6 @@ fetch https://raw.githubusercontent.com/jsegaert/iocage-my-plugins/master/node-r
 ```
 Install the plugin.  Adjust host interface and IP address as needed.  
 ```
-iocage fetch -P -n node-red.json ip4_addr="em0|192.168.0.100"
+iocage fetch -P -n node-red.json ip4_addr="em0|192.168.0.100/24"
 ```
 

@@ -19,6 +19,9 @@
 #
 # nodered_logfile:        The logfile Node-RED uses.
 #                         Default: "/var/log/nodered"
+#
+# nodered_cmd:            The path to the node-red executable.
+#                         Default: "/usr/local/bin/node-red"
 
 . /etc/rc.subr
 name="nodered"
@@ -28,10 +31,10 @@ load_rc_config ${name}
 : ${nodered_enable:="NO"}
 : ${nodered_user:="nrserver"}
 : ${nodered_logfile:="/var/log/nodered"}
+: ${nodered_cmd:="/usr/local/bin/node-red"}
 
-procname="/usr/local/bin/node-red"
 command="/usr/sbin/daemon"
-command_args="-o ${nodered_logfile} ${procname} ${nodered_cmdargs}"
+command_args="-o ${nodered_logfile} ${nodered_cmd} ${nodered_cmdargs}"
 
 start_precmd=nodered_precmd
 extra_commands="update"
